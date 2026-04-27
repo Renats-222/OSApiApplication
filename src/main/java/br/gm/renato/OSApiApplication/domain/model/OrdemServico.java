@@ -11,10 +11,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-
 
 /**
  *
@@ -39,6 +41,18 @@ public class OrdemServico {
 
     private LocalDateTime dataAbertura;
     private LocalDateTime dataFinalizacao;
+
+    @OneToMany(mappedBy = "ordemServico")
+    private List<Comentario> comentarios = new ArrayList<>();
+
+    // 2. Adicione o Getter e o Setter (O Jackson precisa deles para gerar o JSON)
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
 
     public OrdemServico() {
     }
@@ -126,5 +140,5 @@ public class OrdemServico {
         final OrdemServico other = (OrdemServico) obj;
         return Objects.equals(this.id, other.id);
     }
-    
+
 }

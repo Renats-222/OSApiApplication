@@ -1,6 +1,7 @@
 package br.gm.renato.OSApiApplication.controller;
 
 import br.gm.renato.OSApiApplication.domain.exception.dto.AtualizaStatusDTO;
+import br.gm.renato.OSApiApplication.domain.model.Comentario;
 import br.gm.renato.OSApiApplication.domain.model.OrdemServico;
 import br.gm.renato.OSApiApplication.domain.repository.OrdemServicoRepository;
 import br.gm.renato.OSApiApplication.domain.service.OrdemServicoService;
@@ -32,14 +33,24 @@ public class OrdemServicoController {
     public List<OrdemServico> listarPorCliente(@PathVariable Long clienteId) {
         return ordemServicoRepository.findByClienteId(clienteId);
     }
+    
+    // ... outros métodos acima
+
+    @GetMapping("/{ordemServicoId}")
+    public ResponseEntity<OrdemServico> buscar(@PathVariable Long ordemServicoId) {
+        // Buscamos a OS pelo ID. Se achar, retorna 200 OK. Se não, 404 Not Found.
+        return ordemServicoRepository.findById(ordemServicoId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @PutMapping("/atualiza-status/{ordemServicoID}")
     public ResponseEntity<OrdemServico> atualizaStatus(
             @PathVariable Long ordemServicoID,
             @Valid @RequestBody AtualizaStatusDTO statusDTO) {
-        
+
         Optional<OrdemServico> optOS = ordemServicoService.atualizaStatus(
-                ordemServicoID, 
+                ordemServicoID,
                 statusDTO.status());
 
         if (optOS.isPresent()) {

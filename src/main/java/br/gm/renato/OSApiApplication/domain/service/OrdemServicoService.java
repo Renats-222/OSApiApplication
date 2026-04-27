@@ -1,8 +1,10 @@
 package br.gm.renato.OSApiApplication.domain.service;
 
 import br.gm.renato.OSApiApplication.domain.exception.DomainException;
+import br.gm.renato.OSApiApplication.domain.model.Comentario;
 import br.gm.renato.OSApiApplication.domain.model.OrdemServico;
 import br.gm.renato.OSApiApplication.domain.model.StatusOrdemServico;
+import br.gm.renato.OSApiApplication.domain.repository.ComentarioRepository;
 import br.gm.renato.OSApiApplication.domain.repository.OrdemServicoRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -14,6 +16,8 @@ public class OrdemServicoService {
 
     @Autowired
     private OrdemServicoRepository ordemServicoRepository;
+    @Autowired
+    private ComentarioRepository comentarioRepository;
 
     public OrdemServico criar(OrdemServico ordemServico) {
         ordemServico.setStatus(StatusOrdemServico.ABERTA);
@@ -21,8 +25,20 @@ public class OrdemServicoService {
         return ordemServicoRepository.save(ordemServico);
     }
 
+    public Comentario adicionarComentario(Long ordemServicoId, String descricao) {
+        OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId)
+                .orElseThrow(() -> new DomainException("Ordem de serviço não encontrada"));
+
+        Comentario comentario = new Comentario();
+        comentario.setDescricao(descricao);
+        comentario.setDataEnvio(LocalDateTime.now()); // Data automática
+        comentario.setOrdemServico(ordemServico);
+
+        return comentarioRepository.save(comentario);
+    }
+
     public Optional<OrdemServico> atualizaStatus(Long ordemServicoID, StatusOrdemServico status) {
-        
+
         Optional<OrdemServico> optOrdemServico = ordemServicoRepository.findById(ordemServicoID);
 
         if (optOrdemServico.isPresent()) {
@@ -30,17 +46,17 @@ public class OrdemServicoService {
 
             if (ordemServico.getStatus() == StatusOrdemServico.ABERTA
                     && status != StatusOrdemServico.ABERTA) {
-                
+
                 ordemServico.setStatus(status);
                 ordemServico.setDataFinalizacao(LocalDateTime.now());
-                
+
                 ordemServicoRepository.save(ordemServico);
                 return Optional.of(ordemServico);
-                
+
             } else {
                 return Optional.empty();
             }
-            
+
         } else {
             throw new DomainException("Não existe OS com o id " + ordemServicoID);
         }
