@@ -5,6 +5,7 @@
 package br.gm.renato.OSApiApplication.domain.repository;
 
 import br.gm.renato.OSApiApplication.domain.model.Comentario;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
+    List<Comentario> findByOrdemServicoId(Long ordemServicoId);
 }
