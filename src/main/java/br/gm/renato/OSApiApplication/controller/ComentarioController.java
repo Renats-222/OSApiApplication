@@ -53,15 +53,12 @@ public class ComentarioController {
             @PathVariable Long ordemServicoId, 
             @PathVariable Long comentarioId) {
         
-        // Verifica se o comentário existe antes de tentar apagar
         if (!comentarioRepository.existsById(comentarioId)) {
             return ResponseEntity.notFound().build();
         }
         
-        // Se existir, apaga do banco de dados
         comentarioRepository.deleteById(comentarioId);
         
-        // Retorna 204 No Content (Padrão REST para deleção com sucesso)
         return ResponseEntity.noContent().build();
     }
     @PutMapping("/{comentarioId}")
@@ -72,10 +69,8 @@ public class ComentarioController {
 
         return comentarioRepository.findById(comentarioId)
                 .map(comentarioExistente -> {
-                    // Atualizamos apenas a descrição enviada no JSON
                     comentarioExistente.setDescricao(comentario.getDescricao());
                     
-                    // Salvamos a alteração no banco
                     comentarioRepository.save(comentarioExistente);
                     
                     return ResponseEntity.ok(comentarioExistente);

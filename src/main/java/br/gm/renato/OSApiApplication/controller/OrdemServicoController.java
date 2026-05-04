@@ -35,10 +35,10 @@ public class OrdemServicoController {
         return ordemServicoRepository.findByClienteId(clienteId);
     }
 
-    // ... outros métodos acima
+   
     @GetMapping("/{ordemServicoId}")
     public ResponseEntity<OrdemServico> buscar(@PathVariable Long ordemServicoId) {
-        // Buscamos a OS pelo ID. Se achar, retorna 200 OK. Se não, 404 Not Found.
+        
         return ordemServicoRepository.findById(ordemServicoId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

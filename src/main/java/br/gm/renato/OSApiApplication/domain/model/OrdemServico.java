@@ -35,7 +35,6 @@ public class OrdemServico {
     private String descricao;
     private BigDecimal preco;
 
-    // Diz ao banco para salvar o texto "ABERTA" ou "FINALIZADA" em vez de números
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico status;
 
@@ -45,7 +44,6 @@ public class OrdemServico {
     @OneToMany(mappedBy = "ordemServico")
     private List<Comentario> comentarios = new ArrayList<>();
 
-    // 2. Adicione o Getter e o Setter (O Jackson precisa deles para gerar o JSON)
     public List<Comentario> getComentarios() {
         return comentarios;
     }
